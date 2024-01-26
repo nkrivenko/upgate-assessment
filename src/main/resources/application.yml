@@ -1,0 +1,17 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/upgate_db
+    username: postgres
+    password: postgres
+  liquibase:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/upgate_db
+    user: postgres
+    password: postgres
+
+application:
+  upgate:
+    api-key: 1115b450-fa58-47d6-b94b-d25b9e948771
+    base-url: https://sandbox.upgate.com/v1
+    success-url: http://localhost:8080/success.html
+    failure-url: http://localhost:8080/failure.html

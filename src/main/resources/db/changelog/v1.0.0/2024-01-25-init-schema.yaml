@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: init-schema
+      author: nkrivenko
+      changes:
+        - sql:
+            sql: CREATE TYPE transaction_status AS ENUM ('CREATED', 'SUCCEEDED', 'FAILED', 'ERROR');
+        - sql:
+            sql: CREATE CAST (character varying AS transaction_status) WITH INOUT AS IMPLICIT;
+        - sql:
+            sql: CREATE CAST (transaction_status AS character varying) WITH INOUT AS IMPLICIT;
+        - createTable:
+            tableName: payment
+            columns:
+              - column:
+                  name: id
+                  type: varchar(64)
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: customer_id
+                  type: varchar(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transaction_status
+                  type: transaction_status
+                  constraints:
+                    nullable: false
+              - column:
+                  name: country_code
+                  type: varchar(4)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency_code
+                  type: varchar(4)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: numeric(18, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: timestamp(6)
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp(6)
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false

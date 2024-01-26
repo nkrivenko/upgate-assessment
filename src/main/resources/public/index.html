@@ -1,0 +1,97 @@
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Интернет-магазин</title>
+
+    <style>
+        table {
+            border: 1px solid black;
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            border: 1px solid transparent;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            color: #fff;
+            background-color: #007bff;
+        }
+
+        .btn:hover {
+            background-color: #0069d9;
+        }
+
+        .btn:disabled {
+            background-color: #0099ff;
+        }
+    </style>
+
+    <script>
+        function pay() {
+            document.getElementById("btnPay").disabled = true;
+
+            const paymentRequest = {
+                paymentMethod: "CARD",
+                merchantCustomerId: "g4k3k4",
+                amount: "9.99",
+                currencyCode: "USD",
+                email: "john_doe@upgate.com",
+                language: "en-us",
+                countryCode: "US",
+                shopUrl: "https://example.com",
+                shopName: "My test shop",
+                products: [
+                    {
+                        merchantProductId: "R_001",
+                        productType: "SALE",
+                        productPrice: "9.99",
+                        productName: "Test product name",
+                        productDescription: "Test product description",
+                        productId: "2JZGULPNK27K2"
+                    }
+                ]
+            };
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost:8080/v1/payments", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        let response = JSON.parse(xhr.responseText);
+                        window.location.replace(response.redirectUrl);
+                    } else {
+                        document.getElementById("error").display = "block";
+                        document.getElementById("btnPay").disabled = false;
+                    }
+                }
+            };
+
+            xhr.send(JSON.stringify(paymentRequest));
+        }
+    </script>
+</head>
+<body>
+<p id="error" hidden="hidden">Не удалось совершить покупку</p>
+<table>
+    <thead>
+    <tr>
+        <th>Название товара</th>
+        <th>Цена</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>Пыльник ШРУСа</td>
+        <td>$9.99</td>
+    </tr>
+    </tbody>
+</table>
+<button class="btn" id="btnPay" onclick="pay()">Оплатить</button>
+</body>
+</html>
